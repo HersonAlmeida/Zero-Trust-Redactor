@@ -32,3 +32,8 @@ Thumbs.db
 # Large model assets (download via scripts)
 public/models/**
 !public/models/README.md
+
+# Release artifacts (upload manually to GitHub Releases)
+*.zip
+Zero-Trust-Redactor-v*/
+release/
