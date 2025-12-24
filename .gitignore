@@ -1,0 +1,34 @@
+# Node
+node_modules/
+pm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build output
+/dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Temp and logs
+/temp/
+*.tmp
+*.log
+audit.log
+
+# Environment
+.env
+.env.*
+*.local
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Large model assets (download via scripts)
+public/models/**
+!public/models/README.md

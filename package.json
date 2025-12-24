@@ -1,0 +1,45 @@
+{
+  "name": "zero-trust-redactor",
+  "version": "2.0.0",
+  "description": "Localhost Privacy Suite - Offline PII redaction with local AI",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "setup": "node scripts/download-models.js",
+    "setup:bert": "node scripts/download-models.js --bert-only",
+    "setup:llama": "node scripts/download-models.js --llama-only",
+    "server": "python server.py",
+    "start": "concurrently \"npm run dev\" \"npm run server\""
+  },
+  "keywords": [
+    "privacy",
+    "redaction",
+    "pii",
+    "ai",
+    "offline",
+    "bert",
+    "llama"
+  ],
+  "author": "Zero-Trust-Redactor Contributors",
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/your-username/zero-trust-redactor#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/zero-trust-redactor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/zero-trust-redactor/issues"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.80",
+    "@xenova/transformers": "^2.17.2",
+    "jspdf": "^3.0.4",
+    "pdfjs-dist": "^4.0.379",
+    "vite": "^7.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
