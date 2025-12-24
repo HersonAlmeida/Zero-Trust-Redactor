@@ -23,8 +23,16 @@ def add_security_headers(response):
     response.headers['X-Frame-Options'] = 'DENY'
     # XSS Protection
     response.headers['X-XSS-Protection'] = '1; mode=block'
-    # Content Security Policy
-    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    # Content Security Policy - allow fonts, CDN scripts, and data URIs
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net blob:; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: blob:; "
+        "connect-src 'self' https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co https://raw.githubusercontent.com blob:; "
+        "worker-src 'self' blob:;"
+    )
     # Referrer Policy - don't leak document URLs
     response.headers['Referrer-Policy'] = 'no-referrer'
     # Permissions Policy - restrict browser features

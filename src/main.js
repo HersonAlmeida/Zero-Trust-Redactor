@@ -151,10 +151,12 @@ function setupKeyboardShortcuts() {
 // INITIALIZATION
 // ============================================
 async function initialize() {
+  console.log('🚀 initialize() called');
   setupKeyboardShortcuts();
   updateLoadingStep('bert', 'active');
   
   try {
+    console.log('🔄 Calling initAllModels...');
     const result = await initAllModels((progress) => {
       // Update loading bar
       if (elements.loadingFill) {
@@ -1555,13 +1557,25 @@ document.addEventListener('keydown', (e) => {
 // ============================================
 // STARTUP
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
+console.log('📄 main.js loaded');
+
+// Check if DOM is already loaded
+if (document.readyState === 'loading') {
+  console.log('⏳ DOM still loading, adding listener...');
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ DOMContentLoaded fired');
+    setupFileHandlers();
+    setupKeyboardShortcuts();
+    setupScrollToTop();
+    updateStats();
+    initialize();
+  });
+} else {
+  console.log('✅ DOM already loaded, running immediately');
   setupFileHandlers();
   setupKeyboardShortcuts();
   setupScrollToTop();
   updateStats();
-  
-  // Initialize models
   initialize();
-});
+}
 

@@ -1,0 +1,258 @@
+<div align="center">
+
+# 🛡️ Zero-Trust Redactor Pro
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://python.org/)
+[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local-success)](.)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.)
+
+**Localhost Privacy Suite** — AI-powered PII redaction that runs entirely on your machine.
+
+Your documents never leave your device. Ever.
+
+[Features](#-features) • [Quick Start](#-quick-start) • [Usage](#-usage) • [Privacy](#-privacy-guarantee) • [License](#-license)
+
+---
+
+<!-- Add a screenshot here -->
+<!-- ![Zero-Trust Redactor Screenshot](docs/screenshot.png) -->
+
+</div>
+
+## 🎯 What is Zero-Trust Redactor?
+
+A desktop-first application for redacting **Personally Identifiable Information (PII)** from PDF documents using local AI. Unlike cloud-based solutions, all processing happens on your machine—your sensitive documents are never uploaded anywhere.
+
+> 💡 **Zero Trust** means we assume the network is hostile. Your document data stays local; only one-time model downloads use the network.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🚀 **Fast Mode** | BERT NER + regex patterns for instant PII detection |
+| 🧠 **Deep Scan** | Llama 3.2 1B for context-aware analysis (requires WebGPU) |
+| 📄 **PDF Preservation** | Redactions maintain original document formatting |
+| ✋ **Manual Selection** | Highlight text to add custom redaction targets |
+| 🔒 **100% Local** | Document data never leaves your device |
+| 📋 **Reports** | Export detection reports as PDF |
+| 🎨 **Modern UI** | Dark theme, drag-and-drop, keyboard shortcuts |
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** 18+
+- **Python** 3.9+
+- **Browser**: Chrome 113+ or Edge 113+ (for WebGPU/Deep Scan)
+- ~500MB disk space (models auto-download on first use)
+
+### Option 1: One-Click Launch (Windows)
+
+```bash
+# Double-click or run:
+start.bat
+```
+
+### Option 2: Manual Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/HersonAlmeida/Zero-Trust-Redactor.git
+cd Zero-Trust-Redactor
+
+# 2. Install dependencies
+npm install
+pip install -r requirements.txt
+
+# 3. Start the application
+npm run start
+```
+
+🌐 Open **http://localhost:3000** — BERT model downloads automatically on first use (~50MB, cached in browser).
+
+---
+
+## 🎯 Usage
+
+<table>
+<tr>
+<td width="50%">
+
+### Basic Workflow
+
+1. **Upload** — Drag & drop a PDF or click to browse
+2. **Scan** — Choose Fast Mode (BERT) or Deep Scan (Llama)
+3. **Review** — Check detected entities, add/remove targets
+4. **Redact** — Download the redacted PDF
+
+</td>
+<td width="50%">
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+S` | Run scan |
+| `Ctrl+R` | Redact document |
+| `Ctrl+P` | Preview redactions |
+| `Ctrl+Z` | Undo last manual target |
+| `Esc` | Close modals |
+
+</td>
+</tr>
+</table>
+
+### Manual Entity Addition
+
+Select any text in the document view → Click **"Add to Targets"** in the tooltip that appears.
+
+---
+
+## 🔒 Privacy Guarantee
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  YOUR DEVICE                          │  INTERNET           │
+│  ══════════════════════════════════   │  ═══════════════    │
+│  ┌─────────┐    ┌─────────┐           │                     │
+│  │   PDF   │───▶│   AI    │           │  ✗ No document      │
+│  │ (local) │    │ (local) │           │    data sent        │
+│  └─────────┘    └─────────┘           │                     │
+│       │              │                │  ✓ One-time model   │
+│       ▼              ▼                │    download only    │
+│  ┌─────────────────────┐              │                     │
+│  │  Redacted PDF       │              │                     │
+│  │  (stays local)      │              │                     │
+│  └─────────────────────┘              │                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+- ✅ **No cloud uploads** — AI runs 100% locally
+- ✅ **No telemetry** — Zero analytics or tracking
+- ✅ **Original untouched** — New redacted copy is created
+- ✅ **Temp files cleaned** — Inputs deleted immediately after processing
+- ✅ **Open source** — Audit the code yourself
+
+---
+
+## 🛠️ Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run start` | Start frontend + backend (recommended) |
+| `npm run dev` | Start Vite dev server only |
+| `npm run server` | Start Flask backend only |
+| `npm run build` | Build for production |
+
+---
+
+## 📁 Project Structure
+
+```
+Zero-Trust-Redactor/
+├── src/
+│   ├── main.js                 # App entry point
+│   └── services/
+│       ├── ai-engine.js        # BERT & Llama model handling
+│       ├── pdf-processor.js    # PDF text extraction
+│       ├── redaction-service.js# Backend communication
+│       └── model-manager.js    # Model versioning
+├── server.py                   # Flask backend (PyMuPDF redaction)
+├── public/                     # Static assets
+├── scripts/                    # Setup scripts
+├── start.bat                   # Windows launcher
+└── package.json
+```
+
+---
+
+## 🚧 Troubleshooting
+
+<details>
+<summary><b>Models not loading</b></summary>
+
+BERT downloads automatically on first use. If it fails:
+- Check your internet connection (one-time download)
+- Try refreshing the page
+- Check browser console for errors
+
+</details>
+
+<details>
+<summary><b>WebGPU not supported</b></summary>
+
+Deep Scan (Llama) requires WebGPU:
+- Use Chrome 113+ or Edge 113+
+- Fast Mode (BERT) works on all modern browsers
+
+</details>
+
+<details>
+<summary><b>Server connection failed</b></summary>
+
+Ensure the Flask backend is running:
+```bash
+python server.py
+# or
+npm run server
+```
+
+</details>
+
+<details>
+<summary><b>Redaction returns 500 error</b></summary>
+
+Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+</details>
+
+---
+
+## 📦 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **AI (NER)** | Transformers.js + BERT |
+| **AI (LLM)** | WebLLM + Llama 3.2 |
+| **PDF Processing** | PDF.js (extract) + PyMuPDF (redact) |
+| **Frontend** | Vanilla JS + Vite |
+| **Backend** | Flask + Flask-CORS |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**Built for YMYL (Your Money or Your Life) data privacy.**
+
+Handle financial, medical, and legal documents with confidence.
+
+⭐ Star this repo if you find it useful!
+
+</div>

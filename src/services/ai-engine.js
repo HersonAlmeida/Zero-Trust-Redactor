@@ -12,7 +12,7 @@ let modelsLoadedFrom = { bert: null, llama: null }; // 'local' or 'cdn'
 let currentModelTier = 'standard'; // 'standard' or 'pro'
 let hardwareCapabilities = null;
 
-const DEBUG_LOGS = false;
+const DEBUG_LOGS = false;  // Disable for production
 const logDebug = (...args) => { if (DEBUG_LOGS) console.log(...args); };
 
 // Model configurations - Using publicly accessible models
@@ -175,35 +175,37 @@ async function clearModelCache() {
 
 /**
  * Wait for Transformers.js to be loaded from CDN
+ * In production, dynamically import it if not already loaded
  */
-function waitForTransformers(timeout = 30000) {
-  return new Promise((resolve, reject) => {
-    // Already loaded
-    if (window.TransformersJS) {
-      resolve(window.TransformersJS);
-      return;
-    }
+async function waitForTransformers(timeout = 30000) {
+  // Already loaded by index.html script
+  if (window.TransformersJS) {
+    return window.TransformersJS;
+  }
+  
+  // Error occurred in index.html script
+  if (window.TransformersJSError) {
+    throw window.TransformersJSError;
+  }
+  
+  // Production mode: dynamically import Transformers.js
+  logDebug('🔄 Loading Transformers.js from CDN...');
+  try {
+    const transformers = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0');
+    const { pipeline, env } = transformers;
     
-    // Error occurred
-    if (window.TransformersJSError) {
-      reject(window.TransformersJSError);
-      return;
-    }
+    // Configure for Hugging Face CDN only
+    env.allowLocalModels = false;
+    env.allowRemoteModels = true;
+    env.useBrowserCache = true;
     
-    const timeoutId = setTimeout(() => {
-      reject(new Error('Timeout waiting for Transformers.js to load'));
-    }, timeout);
-    
-    window.addEventListener('transformers-ready', () => {
-      clearTimeout(timeoutId);
-      resolve(window.TransformersJS);
-    }, { once: true });
-    
-    window.addEventListener('transformers-error', () => {
-      clearTimeout(timeoutId);
-      reject(window.TransformersJSError || new Error('Failed to load Transformers.js'));
-    }, { once: true });
-  });
+    window.TransformersJS = { pipeline, env, ...transformers };
+    logDebug('✅ Transformers.js loaded dynamically');
+    return window.TransformersJS;
+  } catch (error) {
+    console.error('❌ Failed to load Transformers.js:', error);
+    throw error;
+  }
 }
 
 /**
