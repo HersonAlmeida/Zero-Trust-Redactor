@@ -171,11 +171,20 @@ def redact_pdf():
 
         for page in doc:
             for word in sensitive_words:
-                if not word:
+                if not word or not word.strip():
                     continue
                 
-                # Search for all instances of the word
-                areas = page.search_for(word)
+                # Normalize the word (remove extra whitespace)
+                word_normalized = ' '.join(word.split())
+                
+                # Case-insensitive search (flags=2)
+                # Try case-insensitive first for better matching
+                areas = page.search_for(word_normalized, flags=2)
+                
+                # If no case-insensitive matches, try exact case match
+                if not areas:
+                    areas = page.search_for(word_normalized, flags=0)
+                
                 for area in areas:
                     # Add redaction annotation (black box)
                     page.add_redact_annot(area, fill=redact_color)

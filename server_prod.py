@@ -79,14 +79,14 @@ def redact_pdf():
     if not file.filename.lower().endswith('.pdf'):
         return jsonify({'error': 'File must be a PDF'}), 400
     
-    entities_json = request.form.get('entities', '[]')
-    try:
-        entities = json.loads(entities_json)
-    except json.JSONDecodeError:
-        return jsonify({'error': 'Invalid entities JSON'}), 400
+    # Accept 'words' parameter as comma-separated string (matching server.py)
+    sensitive_words = request.form.get('words', '').split(',')
     
-    if not entities:
-        return jsonify({'error': 'No entities to redact'}), 400
+    # Filter empty words
+    sensitive_words = [w.strip() for w in sensitive_words if w.strip()]
+    
+    if not sensitive_words:
+        return jsonify({'error': 'No words to redact'}), 400
     
     # Generate unique filename
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -104,17 +104,26 @@ def redact_pdf():
         for page_num in range(len(doc)):
             page = doc[page_num]
             
-            for entity in entities:
-                text_to_redact = entity.get('text', entity.get('entity', ''))
-                if not text_to_redact:
+            for word in sensitive_words:
+                if not word or not word.strip():
                     continue
                 
-                text_instances = page.search_for(text_to_redact)
+                # Normalize the word (remove extra whitespace)
+                word_normalized = ' '.join(word.split())
+                
+                # Case-insensitive search (flags=0 is case-sensitive, flags=2 is case-insensitive)
+                # Try case-insensitive first
+                text_instances = page.search_for(word_normalized, flags=2)
+                
+                # If no case-insensitive matches, try exact case match
+                if not text_instances:
+                    text_instances = page.search_for(word_normalized, flags=0)
                 
                 for inst in text_instances:
                     page.add_redact_annot(inst, fill=(0, 0, 0))
                     redaction_count += 1
             
+            # Apply redactions on this page
             page.apply_redactions()
         
         doc.save(output_path)
