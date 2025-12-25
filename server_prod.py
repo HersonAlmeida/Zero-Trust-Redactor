@@ -86,7 +86,7 @@ def redact_pdf():
     sensitive_words = [w.strip() for w in sensitive_words if w.strip()]
     
     if not sensitive_words:
-        return jsonify({'error': 'No words to redact'}), 400
+        return jsonify({'error': 'No entities to redact. Please run scan first and select entities.'}), 400
     
     # Generate unique filename
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')

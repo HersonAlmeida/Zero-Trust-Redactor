@@ -1340,15 +1340,13 @@ window.runScan = async function () {
       detectedEntities = combined;
     }
 
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-      displayEntities();
+    // Display entities immediately
+    displayEntities();
 
-      // Re-render PDF to show highlights
-      if (currentView === 'pdf' && pdfDocument) {
-        reRenderPDF();
-      }
-    }, 100);
+    // Re-render PDF to show highlights
+    if (currentView === 'pdf' && pdfDocument) {
+      reRenderPDF();
+    }
 
     // Show results with Intel Database info
     if (detectedEntities.length === 0) {
