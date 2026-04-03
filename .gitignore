@@ -1,0 +1,48 @@
+# Node
+node_modules/
+pm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build output
+/dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Temp and logs
+/temp/
+*.tmp
+*.log
+audit.log
+
+# Environment
+.env
+.env.*
+*.local
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Large model assets (download via scripts)
+public/models/**
+!public/models/README.md
+
+# Release artifacts (upload manually to GitHub Releases)
+*.zip
+Zero-Trust-Redactor-v*/
+release/
+
+# --- Privacy Protection ---
+# Test documents and any user PDFs must NEVER be committed.
+# This protects real PII from living forever in git history.
+*.pdf
+*.PDF
+temp/
+uploads/
+redacted_*

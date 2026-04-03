@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Transformers.js Test</title>
+</head>
+<body>
+  <h1>Transformers.js Test</h1>
+  <div id="status">Loading...</div>
+  <script type="module">
+    const status = document.getElementById('status');
+    try {
+      status.textContent = 'Loading Transformers.js...';
+      const { pipeline, env } = await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.2');
+      
+      env.allowLocalModels = false;
+      env.allowRemoteModels = true;
+      
+      status.textContent = 'Loading BERT model (this may take a minute)...';
+      
+      const classifier = await pipeline('token-classification', 'Xenova/bert-base-NER', {
+        progress_callback: (p) => {
+          if (p.status === 'progress') {
+            status.textContent = 'Downloading: ' + Math.round(p.progress) + '%';
+          }
+        }
+      });
+      
+      status.textContent = 'Testing...';
+      const result = await classifier('My name is John and I live in New York.');
+      status.textContent = 'SUCCESS! Found: ' + JSON.stringify(result.map(r => r.word));
+    } catch (e) {
+      status.textContent = 'ERROR: ' + e.message;
+      console.error(e);
+    }
+  </script>
+</body>
+</html>

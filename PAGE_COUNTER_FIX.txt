@@ -1,0 +1,8 @@
+// TEMP FIX - Replace updateCurrentPageIndicator function
+
+// Update the page indicator with current page
+function updateCurrentPageIndicator() {
+  if (!pdfDocument || !elements.pdfPageInfo) return;
+  
+  elements.pdfPageInfo.textContent = `Page ${currentPdfPage} of ${pdfDocument.numPages}`;
+}

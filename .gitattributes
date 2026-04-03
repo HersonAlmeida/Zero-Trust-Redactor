@@ -1,0 +1,13 @@
+# Normalize line endings: store as LF in git, checkout as native on each OS
+* text=auto eol=lf
+
+# Binary files — never alter
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.mjs text eol=lf
